@@ -380,9 +380,17 @@ class LocalDaikin(ClimateEntity):
 
     def update_attribute(self, request: dict, *keys) -> None:
         _LOGGER.info(request)
-        response = requests.put(self.url, json=request).json()
-        _LOGGER.info(response)
-        if response['responses'][0]['rsc'] != 2004:
+
+        response = requests.post(self.url, json=request)
+        _LOGGER.info(f"Response returned status code: {response.status_code}")
+        try:
+            json_response = response.json()
+        except requests.exceptions.JSONDecodeError as e:
+            _LOGGER.error(e)
+            return
+
+        _LOGGER.debug(json_response)
+        if json_response['responses'][0]['rsc'] != 2004:
             raise Exception(f"An exception occured:\n{response}")
 
         self.update()
