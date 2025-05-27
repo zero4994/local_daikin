@@ -8,6 +8,7 @@ import asyncio
 _LOGGER = logging.getLogger(__name__)
 SCAN_INTERVAL = timedelta(seconds=60)
 
+
 async def async_setup_entry(hass, entry, async_add_entities):
     ip = entry.data["ip_address"]
     _LOGGER.info("Waiting for Daikin climate entity to be available for %s", ip)
@@ -28,6 +29,7 @@ async def async_setup_entry(hass, entry, async_add_entities):
         DaikinSwingModeSelect(hass, entry.entry_id, ip),
         DaikinHvacModeSelect(hass, entry.entry_id, ip),
     ])
+
 
 class BaseDaikinSelect(SelectEntity):
     def __init__(self, hass, entry_id, ip, name_suffix, unique_id_suffix):
@@ -53,6 +55,7 @@ class BaseDaikinSelect(SelectEntity):
             manufacturer="Daikin"
         )
 
+
 class DaikinFanSpeedSelect(BaseDaikinSelect):
     def __init__(self, hass, entry_id, ip):
         super().__init__(hass, entry_id, ip, "Fan Speed", "fan_speed")
@@ -61,15 +64,15 @@ class DaikinFanSpeedSelect(BaseDaikinSelect):
     def current_option(self):
         if not self._climate:
             return None
-#        _LOGGER.warning(f"[SelectEntity] current fan_mode = {self._climate.fan_mode}")
+        #        _LOGGER.warning(f"[SelectEntity] current fan_mode = {self._climate.fan_mode}")
         return self._climate.fan_mode
 
     @property
     def options(self):
         if not self._climate:
-#            _LOGGER.warning("[SelectEntity] Climate not initialized")
+            #            _LOGGER.warning("[SelectEntity] Climate not initialized")
             return []
-##        _LOGGER.warning(f"[SelectEntity] fan_modes = {self._climate.fan_modes}")
+        ##        _LOGGER.warning(f"[SelectEntity] fan_modes = {self._climate.fan_modes}")
         return self._climate.fan_modes
 
     def select_option(self, option: str):
@@ -77,6 +80,7 @@ class DaikinFanSpeedSelect(BaseDaikinSelect):
         if self._climate:
             self._climate.set_fan_mode(option)
             self.schedule_update_ha_state(force_refresh=True)
+
 
 class DaikinSwingModeSelect(BaseDaikinSelect):
     def __init__(self, hass, entry_id, ip):
@@ -86,15 +90,15 @@ class DaikinSwingModeSelect(BaseDaikinSelect):
     def current_option(self):
         if not self._climate:
             return None
-#        _LOGGER.warning(f"[SelectEntity] current swing_mode = {self._climate.swing_mode}")
+        #        _LOGGER.warning(f"[SelectEntity] current swing_mode = {self._climate.swing_mode}")
         return self._climate.swing_mode
 
     @property
     def options(self):
         if not self._climate:
-#            _LOGGER.warning("[SelectEntity] Climate not initialized")
+            #            _LOGGER.warning("[SelectEntity] Climate not initialized")
             return []
-#        _LOGGER.warning(f"[SelectEntity] swing_modes = {self._climate.swing_modes}")
+        #        _LOGGER.warning(f"[SelectEntity] swing_modes = {self._climate.swing_modes}")
         return self._climate.swing_modes
 
     def select_option(self, option: str):
@@ -102,6 +106,7 @@ class DaikinSwingModeSelect(BaseDaikinSelect):
         if self._climate:
             self._climate.set_swing_mode(option)
             self.schedule_update_ha_state(force_refresh=True)
+
 
 class DaikinHvacModeSelect(BaseDaikinSelect):
     def __init__(self, hass, entry_id, ip):

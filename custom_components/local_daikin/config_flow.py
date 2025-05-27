@@ -4,7 +4,8 @@ import voluptuous as vol
 DOMAIN = "local_daikin"
 
 class DaikinConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
-    VERSION = 1
+    VERSION = 2
+    MINOR_VERSION = 1
 
     async def async_step_user(self, user_input=None):
         errors = {}
